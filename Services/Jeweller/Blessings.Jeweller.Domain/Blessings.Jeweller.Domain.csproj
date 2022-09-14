@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Blessings.OrderContract\Blessings.Shared.csproj" />
+    <ProjectReference Include="..\..\Order\Blessings.Order.Domain\Blessings.Order.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

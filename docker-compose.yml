@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+
+  userdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+
+  jewellerdb:
+    image: postgres
+
+  orderdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
+  order.api:
+    image: ${DOCKER_REGISTRY-}Blessings.Order.Api
+    build:
+      context: .
+      dockerfile: Services/Order/Order.Api/Dockerfile
+
+  jeweller.api:
+    image: ${DOCKER_REGISTRY-}Blessings.Jeweller.Api
+    build:
+      context: .
+      dockerfile: Services/Jeweller/Jeweller.Api/Dockerfile
+
+  user.api:
+    image: ${DOCKER_REGISTRY-}Blessings.User.Api
+    build:
+      context: .
+      dockerfile: Services/User/User.api/Dockerfile
+
+volumes:
+  postgres_data:

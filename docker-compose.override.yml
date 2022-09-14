@@ -1,0 +1,73 @@
+version: '3.4'
+
+services:
+  userdb:
+    container_name: userdb
+    environment:
+        SA_PASSWORD: "!QAZ2wsx"
+        ACCEPT_EULA: "Y"
+    restart: always
+    ports:
+        - "1433:1433"
+
+  jewellerdb:
+    container_name: jewellerdb
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=JewellerDb
+    restart: always
+    ports:
+        - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  orderdb:
+    container_name: orderdb
+    environment:
+        SA_PASSWORD: "!QAZ2wsx"
+        ACCEPT_EULA: "Y"
+    restart: always
+    ports:
+        - "1433:1433"
+
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+        - "5672:5672"
+        - "15672:15672"
+
+  jeweller.api:
+    container_name: jeweller.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=Server=jewellerdb;Port=5432;Database=JewellerDb;User Id=admin;Password=!QAZ2wsx;"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+    depends_on:
+      - jewellerdb
+      - rabbitmq
+    ports:
+      - "8002:80"
+
+  user.api:
+    container_name: user.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=mongodb://userdb:27017"
+    depends_on:
+      - userdb
+    ports:
+      - "8000:80"
+
+  order.api:
+    container_name: order.api
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - "ConnectionStrings:OrderingConnectionString=Server=orderdb;Database=OrderDb;User Id=sa;Password=!QAZ2wsx"            
+        - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+    depends_on:
+        - orderdb
+        - rabbitmq
+    ports:
+        - "8004:80"
