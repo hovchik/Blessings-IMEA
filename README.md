@@ -1,3 +1,3 @@
 # Blessings
-Task for second intervice in IMEA Systems
+Task for second interview in IMEA Systems
 https://www.imeasystems.com/
