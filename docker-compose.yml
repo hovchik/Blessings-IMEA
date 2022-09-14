@@ -1,36 +1,36 @@
-version: '3.4'
+version: '3.8'
 
 services:
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=!QAZ2wsx
 
-  userdb:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-
-  jewellerdb:
-    image: postgres
-
-  orderdb:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-
-  order.api:
-    image: ${DOCKER_REGISTRY-}Blessings.Order.Api
+  blessings.order.api:
+    image: ${DOCKER_REGISTRY-}blessingsorderapi
     build:
       context: .
-      dockerfile: Services/Order/Order.Api/Dockerfile
+      dockerfile: Services/Order/Blessings.OrdersApi/Dockerfile
 
-  jeweller.api:
-    image: ${DOCKER_REGISTRY-}Blessings.Jeweller.Api
+  blessings.jeweller.api:
+    image: ${DOCKER_REGISTRY-}blessingsjewellerapi
     build:
       context: .
-      dockerfile: Services/Jeweller/Jeweller.Api/Dockerfile
+      dockerfile: Services/Jeweller/Blessings.JewellerApi/Dockerfile
 
-  user.api:
-    image: ${DOCKER_REGISTRY-}Blessings.User.Api
+
+  blessings.user.api:
+    image: ${DOCKER_REGISTRY-}blessingsuserapi
     build:
       context: .
-      dockerfile: Services/User/User.api/Dockerfile
+      dockerfile: Services/User/Blessings.User.Api/Dockerfile
 
 volumes:
-  postgres_data:
+    db:
+       driver: local
